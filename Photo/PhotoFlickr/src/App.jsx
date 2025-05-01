@@ -2,15 +2,9 @@
 import React from 'react';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
-import SearchHistory from './components/SearchHistory';
-import FilterOptions from './components/FilterOptions';
-import PhotoGrid from './components/PhotoGrid';
-import Pagination from './components/Pagination';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import FlickrService from './services/FlickrService';
-import StorageService from './services/StorageService';
-import AnalyticsService from './services/AnalyticsService';
 
 class App extends React.Component {
   constructor(props) {
@@ -20,25 +14,7 @@ class App extends React.Component {
       loading: false,
       error: null,
       prevSearch: '',
-      searchHistory: [],
-      currentPage: 1,
-      itemsPerPage: 12,
-      sortOption: 'relevance',
-      contentFilter: 'all'
     };
-    
-    // Referințe
-    this.resultsRef = React.createRef();
-  }
-
-  componentDidMount() {
-    // Încărcăm istoricul căutărilor
-    const history = StorageService.getSearchHistory();
-    this.setState({ searchHistory: history });
-    
-    // Activăm serviciul de analitică dacă utilizatorul a consimțit
-    const analyticsEnabled = localStorage.getItem('analytics_enabled') === 'true';
-    AnalyticsService.setEnabled(analyticsEnabled);
   }
 
   fetchPhotos = async (searchTerm) => {
@@ -48,7 +24,6 @@ class App extends React.Component {
       loading: true,
       error: null,
       prevSearch: searchTerm,
-      currentPage: 1
     });
     
     try {
@@ -57,13 +32,6 @@ class App extends React.Component {
         photos: data.items || [],
         loading: false
       });
-      
-      // Salvăm termenul de căutare în istoric
-      StorageService.saveSearchTerm(searchTerm);
-      this.updateSearchHistory();
-      
-      // Tracking analitică
-      AnalyticsService.trackSearch(searchTerm);
     } catch (err) {
       console.error("Failed to fetch photos:", err);
       this.setState({
@@ -74,151 +42,63 @@ class App extends React.Component {
     }
   };
 
-  updateSearchHistory = () => {
-    const history = StorageService.getSearchHistory();
-    this.setState({ searchHistory: history });
-  };
-
-  handleHistoryTermSelect = (term) => {
-    this.fetchPhotos(term);
-  };
-
-  handleClearHistory = () => {
-    StorageService.clearSearchHistory();
-    this.setState({ searchHistory: [] });
-  };
-
-  handlePageChange = (page) => {
-    this.setState({ currentPage: page });
-  };
-
-  handleSortChange = (sortOption) => {
-    this.setState({ sortOption });
-    // Implementăm logica de sortare a fotografiilor
-    this.sortPhotos(sortOption);
-  };
-
-  handleFilterChange = (contentFilter) => {
-    this.setState({ contentFilter });
-    // Implementăm logica de filtrare a fotografiilor
-  };
-
-  handleResetFilters = () => {
-    this.setState({
-      sortOption: 'relevance',
-      contentFilter: 'all'
-    });
-    
-    // Resetăm fotografiile la starea inițială
-    if (this.state.prevSearch) {
-      this.fetchPhotos(this.state.prevSearch);
-    }
-  };
-
-  sortPhotos = (sortOption) => {
-    const { photos } = this.state;
-    let sortedPhotos = [...photos];
-    
-    switch (sortOption) {
-      case 'date-desc':
-        sortedPhotos.sort((a, b) => new Date(b.date_taken || b.published) - new Date(a.date_taken || a.published));
-        break;
-      case 'date-asc':
-        sortedPhotos.sort((a, b) => new Date(a.date_taken || a.published) - new Date(b.date_taken || b.published));
-        break;
-      case 'interestingness':
-        // În lipsa unui criteriu de interestingness real, simulăm cu o sortare după lungimea titlului
-        sortedPhotos.sort((a, b) => (b.title?.length || 0) - (a.title?.length || 0));
-        break;
-      default:
-        // relevance - păstrăm ordinea originală de la API
-        break;
-    }
-    
-    this.setState({ photos: sortedPhotos });
-  };
-
-  getCurrentPhotos = () => {
-    const { photos, currentPage, itemsPerPage, contentFilter } = this.state;
-    
-    // Aplicăm filtrarea înainte de paginare
-    let filteredPhotos = [...photos];
-    
-    if (contentFilter !== 'all') {
-      // Implementare simplă de filtrare bazată pe taguri sau titlu
-      filteredPhotos = filteredPhotos.filter(photo => {
-        const allText = `${photo.title} ${photo.tags}`.toLowerCase();
-        
-        switch(contentFilter) {
-          case 'photos-only':
-            return !allText.includes('screenshot') && !allText.includes('capture');
-          case 'screenshots':
-            return allText.includes('screenshot') || allText.includes('capture');
-          default:
-            return true;
-        }
-      });
-    }
-    
-    // Calculăm indexul de start și final pentru paginare
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    
-    // Returnăm subsetul de fotografii pentru pagina curentă
-    return filteredPhotos.slice(startIndex, endIndex);
-  };
-
   render() {
-    const { 
-      photos, 
-      loading, 
-      error, 
-      prevSearch,
-      searchHistory,
-      itemsPerPage,
-    } = this.state;
-    
-    // Obținem subsetul de fotografii pentru pagina curentă
-    const currentPhotos = this.getCurrentPhotos();
+    const { loading, error, prevSearch } = this.state;
     
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="app-container">
         <ErrorBoundary>
           <Header />
-          <main className="flex-grow container-app py-6">
+          <main className="main-content">
             <SearchBar onSearch={this.fetchPhotos} />
             
-            {searchHistory.length > 0 && (
-              <SearchHistory 
-                history={searchHistory} 
-                onSelectTerm={this.handleHistoryTermSelect}
-                onClearHistory={this.handleClearHistory}
-              />
-            )}
-            
-            {prevSearch && (
-              <div ref={this.resultsRef}>
-                <FilterOptions 
-                  onSortChange={this.handleSortChange}
-                  onFilterChange={this.handleFilterChange}
-                  onResetFilters={this.handleResetFilters}
-                />
-                
-                <PhotoGrid 
-                  photos={currentPhotos} 
-                  loading={loading} 
-                  error={error} 
-                  prevSearch={prevSearch} 
-                />
-                
-                {!loading && !error && photos.length > itemsPerPage && (
-                  <Pagination 
-                    totalItems={photos.length} 
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={this.handlePageChange}
-                    scrollToRef={this.resultsRef}
-                  />
-                )}
+            {prevSearch ? (
+              loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                  <p>Se încarcă fotografiile...</p>
+                </div>
+              ) : error ? (
+                <div className="results-container">
+                  <div className="error-message">{error}</div>
+                </div>
+              ) : this.state.photos.length > 0 ? (
+                <div className="results-container">
+                  <h2 className="results-title">Fotografii despre: {prevSearch}</h2>
+                  <div className="photo-grid">
+                    {this.state.photos.map((photo) => (
+                      <div key={photo.link} className="photo-card">
+                        <a href={photo.link} target="_blank" rel="noopener noreferrer" className="photo-link">
+                          <div className="photo-image-container">
+                            <img 
+                              src={photo.media.m} 
+                              alt={photo.title} 
+                              className="photo-image"
+                            />
+                          </div>
+                          <div className="photo-info">
+                            <h3 className="photo-title">{photo.title || "Fără titlu"}</h3>
+                            <p className="photo-author">
+                              De {photo.author.split('(')[1]?.replace(')', '') || "Autor necunoscut"}
+                            </p>
+                          </div>
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="results-container">
+                  <div className="no-results">
+                    Nu s-au găsit fotografii pentru "{prevSearch}"
+                  </div>
+                </div>
+              )
+            ) : (
+              <div className="results-container">
+                <div className="instructions">
+                  Introduceți un termen de căutare pentru a vedea rezultatele
+                </div>
               </div>
             )}
           </main>
