@@ -25,7 +25,7 @@ export default {
         card: '0 2px 10px rgba(0, 0, 0, 0.08)',
       },
       animation: {
-        'spin-slow': 'spin 1.5s linear infinite',
+          'spin': 'spin 1s linear infinite',
       },
     },
   },
