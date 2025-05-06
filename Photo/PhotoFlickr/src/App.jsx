@@ -103,24 +103,23 @@ const App = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto mb-8">
           <div className="relative">
-            <div className="flex shadow-lg rounded-lg overflow-hidden">
+            <form onSubmit={handleSubmit} className="flex shadow-lg rounded-lg overflow-hidden">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
                 placeholder="Căutați fotografii..."
                 className="w-full py-4 px-6 text-lg focus:outline-none border-0"
                 aria-label="Termen de căutare"
               />
               <button 
-                onClick={handleSubmit} 
+                type="submit" 
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 flex items-center transition-colors"
               >
                 <Search className="h-5 w-5 mr-2" />
                 Caută
               </button>
-            </div>
+            </form>
           </div>
 
           {searchHistory.length > 0 && (

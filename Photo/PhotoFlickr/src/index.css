@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Stiluri suplimentare personalizate */
+/* Custom component classes */
 @layer components {
   .btn {
     @apply px-4 py-2 rounded font-medium transition-colors;
@@ -26,7 +26,7 @@
   }
 }
 
-/* Animații */
+/* Animation for loading spinner */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -41,7 +41,7 @@
   animation: spin 1.5s linear infinite;
 }
 
-/* Stiluri care urmează stilizarea din fișierele furnizate */
+/* Base styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -49,271 +49,8 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: #333;
   background-color: #f5f7fa;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  width: 100%;
-}
-
-/* Header styles */
-.app-header {
-  background-color: #2c3e50;
-  color: white;
-  padding: 1.5rem 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  text-align: center;
-}
-
-.app-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  font-size: 1rem;
-  opacity: 0.8;
-}
-
-/* SearchBar styles */
-.search-container {
-  margin-bottom: 2rem;
-}
-
-.search-form {
-  display: flex;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.search-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-right: none;
-  font-size: 16px;
-  border-radius: 5px 0 0 5px;
-  outline: none;
-}
-
-.search-input:focus {
-  border-color: #3498db;
-}
-
-.search-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 0 20px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.2s;
-}
-
-.search-button:hover {
-  background-color: #2980b9;
-}
-
-.search-button svg {
-  margin-right: 8px;
-}
-
-/* PhotoGrid styles */
-.results-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.results-title {
-  font-size: 1.5rem;
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.no-results,
-.instructions,
-.error-message {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: #7f8c8d;
-  font-size: 1.1rem;
-}
-
-.error-message {
-  color: #e74c3c;
-}
-
-/* PhotoCard styles */
-.photo-card {
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  background-color: #fff;
-}
-
-.photo-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-}
-
-.photo-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.photo-image-container {
-  height: 180px;
-  overflow: hidden;
-}
-
-.photo-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s;
-}
-
-.photo-card:hover .photo-image {
-  transform: scale(1.05);
-}
-
-.photo-info {
-  padding: 12px;
-}
-
-.photo-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.photo-author,
-.photo-date {
-  font-size: 12px;
-  color: #7f8c8d;
-  margin-bottom: 2px;
-}
-
-/* Loader styles */
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 0;
-}
-
-.loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-/* Footer styles */
-.app-footer {
-  background-color: #2c3e50;
-  color: white;
-  padding: 1.5rem 0;
-  margin-top: 2rem;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  text-align: center;
-}
-
-.footer-container p {
-  margin-bottom: 0.5rem;
-}
-
-.footer-container a {
-  color: #3498db;
-  text-decoration: none;
-}
-
-.footer-container a:hover {
-  text-decoration: underline;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  .photo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-
-  .app-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .results-title {
-    font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .photo-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .search-form {
-    flex-direction: column;
-  }
-
-  .search-input {
-    border-radius: 5px 5px 0 0;
-    border-right: 1px solid #ddd;
-    border-bottom: none;
-  }
-
-  .search-button {
-    border-radius: 0 0 5px 5px;
-    padding: 10px;
-    justify-content: center;
-  }
 }
