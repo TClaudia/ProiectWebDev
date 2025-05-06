@@ -1,7 +1,8 @@
 // src/services/FlickrService.js
 class FlickrService {
   constructor() {
-    this.baseUrl = 'https://www.flickr.com/services/feeds/photos_public.gne';
+    // Update base URL to use our proxy
+    this.baseUrl = '/api/flickr';
   }
 
   /**
@@ -15,7 +16,7 @@ class FlickrService {
     }
 
     const encodedTerm = encodeURIComponent(searchTerm.trim());
-    const url = `${this.baseUrl}?format=json&tags=${encodedTerm}&nojsoncallback=1`;
+    const url = `${this.baseUrl}/photos_public.gne?format=json&tags=${encodedTerm}&nojsoncallback=1`;
 
     try {
       const response = await fetch(url);
@@ -95,4 +96,3 @@ class FlickrService {
 }
 
 export default new FlickrService();
-

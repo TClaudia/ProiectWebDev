@@ -12,6 +12,10 @@ const App = () => {
     sortBy: 'relevance',
     contentType: 'all'
   });
+  const [tempFilterOptions, setTempFilterOptions] = useState({
+    sortBy: 'relevance',
+    contentType: 'all'
+  });
   const [searchHistory, setSearchHistory] = useState([]);
 
   useEffect(() => {
@@ -35,6 +39,67 @@ const App = () => {
     localStorage.removeItem('flickrSearchHistory');
   };
 
+  // JSONP implementation to handle CORS
+  const fetchFlickrJSONP = (term) => {
+    return new Promise((resolve, reject) => {
+      // Clean up any previous JSONP script tags
+      const oldScript = document.getElementById('flickr-jsonp-script');
+      if (oldScript) {
+        document.head.removeChild(oldScript);
+      }
+
+      // Create a unique callback name
+      const callbackName = `flickrJsonpCallback_${Date.now()}`;
+      
+      // Create the global callback function
+      window[callbackName] = (data) => {
+        // Clean up
+        delete window[callbackName];
+        const script = document.getElementById('flickr-jsonp-script');
+        if (script) {
+          document.head.removeChild(script);
+        }
+        
+        resolve(data);
+      };
+
+      // Build the URL
+      const encodedTerm = encodeURIComponent(term.trim());
+      const url = `https://www.flickr.com/services/feeds/photos_public.gne?format=json&tags=${encodedTerm}&jsoncallback=${callbackName}`;
+      
+      // Create script element
+      const script = document.createElement('script');
+      script.src = url;
+      script.id = 'flickr-jsonp-script';
+      script.type = 'text/javascript';
+      script.async = true;
+      
+      // Handle errors
+      script.onerror = () => {
+        // Clean up
+        delete window[callbackName];
+        if (document.getElementById('flickr-jsonp-script')) {
+          document.head.removeChild(document.getElementById('flickr-jsonp-script'));
+        }
+        reject(new Error('Failed to load Flickr data'));
+      };
+      
+      // Add the script to the page
+      document.head.appendChild(script);
+      
+      // Set a timeout in case the request hangs
+      setTimeout(() => {
+        if (window[callbackName]) {
+          delete window[callbackName];
+          if (document.getElementById('flickr-jsonp-script')) {
+            document.head.removeChild(document.getElementById('flickr-jsonp-script'));
+          }
+          reject(new Error('Request timeout'));
+        }
+      }, 10000); // 10 seconds timeout
+    });
+  };
+
   const searchPhotos = async (term) => {
     if (!term.trim()) return;
     
@@ -44,17 +109,30 @@ const App = () => {
     saveToHistory(term);
     
     try {
-      const encodedTerm = encodeURIComponent(term.trim());
-      const url = `https://www.flickr.com/services/feeds/photos_public.gne?format=json&tags=${encodedTerm}&nojsoncallback=1`;
+      // Use our JSONP implementation
+      const data = await fetchFlickrJSONP(term);
       
-      const response = await fetch(url);
+      // Apply sorting based on filter options
+      let sortedItems = [...(data.items || [])];
       
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.status}`);
+      if (filterOptions.sortBy === 'date-desc') {
+        sortedItems.sort((a, b) => new Date(b.published) - new Date(a.published));
+      } else if (filterOptions.sortBy === 'date-asc') {
+        sortedItems.sort((a, b) => new Date(a.published) - new Date(b.published));
       }
       
-      const data = await response.json();
-      setPhotos(data.items || []);
+      // Apply content filtering
+      if (filterOptions.contentType !== 'all') {
+        // This is just a simulation since the Flickr API doesn't provide content type filtering
+        // In a real app, you would use the API's filtering capabilities
+        if (filterOptions.contentType === 'photos-only') {
+          // No filtering needed as they're all photos
+        } else if (filterOptions.contentType === 'screenshots') {
+          sortedItems = sortedItems.filter(item => item.tags.includes('screenshot'));
+        }
+      }
+      
+      setPhotos(sortedItems);
     } catch (err) {
       console.error('Failed to fetch photos:', err);
       setError('Nu s-au putut încărca fotografiile. Vă rugăm să încercați din nou.');
@@ -70,17 +148,29 @@ const App = () => {
   };
 
   const handleFilterChange = (e) => {
-    setFilterOptions({
-      ...filterOptions,
+    setTempFilterOptions({
+      ...tempFilterOptions,
       [e.target.name]: e.target.value
     });
   };
 
+  const applyFilters = () => {
+    setFilterOptions(tempFilterOptions);
+    if (prevSearch) {
+      searchPhotos(prevSearch);
+    }
+  };
+
   const resetFilters = () => {
-    setFilterOptions({
+    const defaultOptions = {
       sortBy: 'relevance',
       contentType: 'all'
-    });
+    };
+    setTempFilterOptions(defaultOptions);
+    setFilterOptions(defaultOptions);
+    if (prevSearch) {
+      searchPhotos(prevSearch);
+    }
   };
 
   const extractAuthorName = (author) => {
@@ -168,7 +258,7 @@ const App = () => {
                     <select 
                       id="sortBy" 
                       name="sortBy"
-                      value={filterOptions.sortBy}
+                      value={tempFilterOptions.sortBy}
                       onChange={handleFilterChange}
                       className="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-blue-500 focus:border-blue-500"
                     >
@@ -186,7 +276,7 @@ const App = () => {
                     <select 
                       id="contentType" 
                       name="contentType"
-                      value={filterOptions.contentType}
+                      value={tempFilterOptions.contentType}
                       onChange={handleFilterChange}
                       className="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-blue-500 focus:border-blue-500"
                     >
@@ -198,13 +288,20 @@ const App = () => {
                   </div>
                 </div>
                 
-                <div className="mt-4 flex justify-end">
+                <div className="mt-4 flex justify-between">
                   <button 
                     className="text-sm flex items-center text-gray-600 hover:text-blue-600"
                     onClick={resetFilters}
                   >
                     <RefreshCw className="h-3 w-3 mr-1" />
                     Resetare filtre
+                  </button>
+                  
+                  <button 
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={applyFilters}
+                  >
+                    Aplică filtre
                   </button>
                 </div>
               </div>
