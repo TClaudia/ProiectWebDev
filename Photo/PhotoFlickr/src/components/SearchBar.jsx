@@ -1,4 +1,5 @@
-// src/components/SearchBar.jsx
+//  Latescu Carmen-Maria
+
 import React from 'react';
 
 class SearchBar extends React.Component {

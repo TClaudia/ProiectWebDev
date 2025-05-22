@@ -1,5 +1,4 @@
-
-// src/components/SearchHistory.jsx
+//  Latescu Carmen-Maria
 import React from 'react';
 
 class SearchHistory extends React.Component {

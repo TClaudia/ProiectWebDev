@@ -1,6 +1,4 @@
-
-
-// src/components/Footer.jsx
+//Tun Claudia-Gabriela
 import React from 'react';
 
 class Footer extends React.Component {

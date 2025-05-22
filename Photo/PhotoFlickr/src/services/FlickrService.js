@@ -1,15 +1,12 @@
-// src/services/FlickrService.js
+//Chiriliuc Laura
 class FlickrService {
   constructor() {
-    // Update base URL to use our proxy
     this.baseUrl = '/api/flickr';
   }
 
-  /**
-   * Caută fotografii pe Flickr după taguri
-   * @param {string} searchTerm - Termenul de căutare pentru taguri
-   * @returns {Promise} Promise care rezolvă cu datele despre fotografii
-   */
+
+   //Caută fotografii pe Flickr după taguri
+
   async searchPhotos(searchTerm) {
     if (!searchTerm || !searchTerm.trim()) {
       throw new Error('Termenul de căutare nu poate fi gol');
@@ -33,24 +30,15 @@ class FlickrService {
     }
   }
 
-  /**
-   * Procesează datele primite de la API pentru a normaliza structura
-   * @param {Object} data - Datele primite de la API Flickr
-   * @returns {Object} Date procesate și normalizate
-   */
+  // Procesează datele primite de la API 
   _processPhotosData(data) {
-    // Verificăm dacă avem datele așteptate
     if (!data || !data.items || !Array.isArray(data.items)) {
       return { items: [] };
     }
-
-    // Procesăm fiecare fotografie pentru a extrage informații utile
     const processedItems = data.items.map(item => {
       return {
         ...item,
-        // Extragem numele autorului din formatul "nobody@flickr.com ("Nume Autor")"
         authorName: this._extractAuthorName(item.author),
-        // Formatăm data pentru afișare
         formattedDate: this._formatDate(item.date_taken || item.published)
       };
     });
@@ -61,11 +49,9 @@ class FlickrService {
     };
   }
 
-  /**
-   * Extrage numele autorului din string-ul furnizat de API
-   * @param {string} authorString - String-ul cu informații despre autor
-   * @returns {string} Numele autorului
-   */
+
+   // Extrage numele autorului din string-ul furnizat de API
+   
   _extractAuthorName(authorString) {
     if (!authorString) return 'Autor necunoscut';
     
@@ -73,11 +59,9 @@ class FlickrService {
     return match ? match[1] : 'Autor necunoscut';
   }
 
-  /**
-   * Formatează data pentru afișare
-   * @param {string} dateString - String-ul cu data
-   * @returns {string} Data formatată
-   */
+
+   // Formatează data pentru afișare
+  
   _formatDate(dateString) {
     if (!dateString) return '';
     

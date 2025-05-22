@@ -1,9 +1,12 @@
-/* src/index.css */
+/*  Latescu Carmen-Maria
+ Chiriliuc Laura
+ Tun Claudia-Gabriela*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom component classes */
+
 @layer components {
   .btn {
     @apply px-4 py-2 rounded font-medium transition-colors;
@@ -26,7 +29,7 @@
   }
 }
 
-/* Animation for loading spinner */
+/* Animație */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -41,7 +44,7 @@
   animation: spin 1.5s linear infinite;
 }
 
-/* Base styles */
+/* Stiluri de bază */
 * {
   box-sizing: border-box;
   margin: 0;

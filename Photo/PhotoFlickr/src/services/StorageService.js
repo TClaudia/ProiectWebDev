@@ -1,35 +1,28 @@
+//  Latescu Carmen-Maria
 
-// src/services/StorageService.js
-/**
- * Serviciu pentru gestionarea stocării locale a istoricului căutărilor
- */
+ // Gestionarea stocării locale a istoricului căutărilor
+ 
 class StorageService {
   constructor() {
     this.storageKey = 'flickr_search_history';
   }
 
-  /**
-   * Salvează un termen de căutare în istoric
-   * @param {string} searchTerm - Termenul de căutare de salvat
-   */
+  
+   // Salvează un termen de căutare în istoric
+   
   saveSearchTerm(searchTerm) {
     if (!searchTerm || !searchTerm.trim()) return;
     
     try {
-      // Obținem istoricul curent
       const history = this.getSearchHistory();
-      
-      // Adăugăm termenul nou (dacă nu există deja)
       if (!history.includes(searchTerm.trim())) {
-        // Limităm istoricul la ultimele 10 căutări
         if (history.length >= 10) {
-          history.pop(); // Eliminăm cea mai veche căutare
+          history.pop();
         }
         
-        history.unshift(searchTerm.trim()); // Adăugăm la început
+        history.unshift(searchTerm.trim()); 
         localStorage.setItem(this.storageKey, JSON.stringify(history));
-      } else {
-        // Dacă termenul există deja, îl mutăm la început
+      } else {  
         const updatedHistory = [
           searchTerm.trim(),
           ...history.filter(term => term !== searchTerm.trim())
@@ -41,10 +34,7 @@ class StorageService {
     }
   }
 
-  /**
-   * Obține istoricul de căutări
-   * @returns {Array} Array cu termenii de căutare salvați
-   */
+  
   getSearchHistory() {
     try {
       const history = localStorage.getItem(this.storageKey);
@@ -55,9 +45,7 @@ class StorageService {
     }
   }
 
-  /**
-   * Șterge istoricul de căutări
-   */
+
   clearSearchHistory() {
     try {
       localStorage.removeItem(this.storageKey);

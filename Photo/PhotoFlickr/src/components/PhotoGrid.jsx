@@ -1,4 +1,4 @@
-// src/components/PhotoGrid.jsx
+//Chiriliuc Laura
 import React from 'react';
 import PhotoCard from './PhotoCard';
 import Loader from './Loader';

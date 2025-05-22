@@ -1,4 +1,4 @@
-// src/components/FilterOptions.jsx
+//Tun Claudia-Gabriela
 import React from 'react';
 
 class FilterOptions extends React.Component {

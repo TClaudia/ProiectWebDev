@@ -1,43 +1,31 @@
 
-// src/services/AnalyticsService.js
-/**
- * Serviciu simplu pentru a urmări acțiunile utilizatorului
- * Într-o aplicație reală, acesta ar putea integra Google Analytics sau alt serviciu
- */
+//Tun Claudia-Gabriela
+// Serviciu  pentru a urmări acțiunile utilizatorului
+
 class AnalyticsService {
   constructor() {
-    this.enabled = false; // Dezactivat implicit pentru respectarea confidențialității
+    this.enabled = false; 
     this.events = [];
   }
 
-  /**
-   * Activează sau dezactivează urmărirea
-   * @param {boolean} isEnabled - Dacă urmărirea este activată
-   */
+  //Activeaza sau dezactiveaza serviciului
   setEnabled(isEnabled) {
     this.enabled = !!isEnabled;
     
     if (!this.enabled) {
-      // Șterge toate evenimentele când este dezactivat
       this.events = [];
     }
   }
 
-  /**
-   * Înregistrează un eveniment de căutare
-   * @param {string} searchTerm - Termenul căutat
-   */
+
+  // Înregistrează un eveniment de căutare
+   
   trackSearch(searchTerm) {
     if (!this.enabled || !searchTerm) return;
     
     this.trackEvent('search', { term: searchTerm });
   }
 
-  /**
-   * Înregistrează un eveniment de click pe fotografie
-   * @param {string} photoId - ID-ul fotografiei
-   * @param {string} photoTitle - Titlul fotografiei
-   */
   trackPhotoClick(photoId, photoTitle) {
     if (!this.enabled || !photoId) return;
     
@@ -47,11 +35,6 @@ class AnalyticsService {
     });
   }
 
-  /**
-   * Înregistrează orice tip de eveniment
-   * @param {string} eventName - Numele evenimentului
-   * @param {Object} eventData - Date asociate evenimentului
-   */
   trackEvent(eventName, eventData = {}) {
     if (!this.enabled || !eventName) return;
     
@@ -64,7 +47,6 @@ class AnalyticsService {
     this.events.push(event);
     console.log('Event tracked:', event);
     
-    // Aici s-ar putea trimite către un serviciu real de analytics
   }
 }
 

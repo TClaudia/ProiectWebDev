@@ -1,6 +1,4 @@
-
-
-// src/components/PhotoDetails.jsx
+//Chiriliuc Laura
 import React from 'react';
 
 class PhotoDetails extends React.Component {

@@ -1,5 +1,4 @@
-
-// src/components/PhotoCard.jsx
+//Chiriliuc Laura
 import React from 'react';
 import PhotoDetails from './PhotoDetails';
 

@@ -1,4 +1,4 @@
-// src/components/Pagination.jsx
+//  Latescu Carmen-Maria
 import React from 'react';
 
 class Pagination extends React.Component {
@@ -10,7 +10,6 @@ class Pagination extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Resetăm pagina curentă când se schimbă totalul de elemente
     if (prevProps.totalItems !== this.props.totalItems) {
       this.setState({ currentPage: 1 });
       this.props.onPageChange(1);
@@ -20,8 +19,7 @@ class Pagination extends React.Component {
   handlePageChange = (newPage) => {
     this.setState({ currentPage: newPage });
     this.props.onPageChange(newPage);
-    
-    // Derulare în sus pentru a vedea rezultatele
+  
     window.scrollTo({
       top: this.props.scrollToRef?.current?.offsetTop || 0,
       behavior: 'smooth'
@@ -38,15 +36,13 @@ class Pagination extends React.Component {
       return null;
     }
     
-    // Determinăm paginile de afișat
     let pages = [];
     const maxPagesToShow = 5;
     
     if (totalPages <= maxPagesToShow) {
-      // Afișăm toate paginile
       pages = Array.from({ length: totalPages }, (_, i) => i + 1);
     } else {
-      // Afișăm un subset de pagini
+
       if (currentPage <= 3) {
         pages = [1, 2, 3, 4, '...', totalPages];
       } else if (currentPage >= totalPages - 2) {

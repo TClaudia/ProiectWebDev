@@ -1,3 +1,6 @@
+//  Latescu Carmen-Maria
+//Tun Claudia-Gabriela
+//Chiriliuc Laura
 import { useState, useEffect } from 'react';
 import { Search, Camera, Image, ChevronDown, Filter, RefreshCw } from 'lucide-react';
 
@@ -19,7 +22,7 @@ const App = () => {
   const [searchHistory, setSearchHistory] = useState([]);
 
   useEffect(() => {
-    // Load search history from localStorage
+    // Incarca istorc din localStorage
     const history = localStorage.getItem('flickrSearchHistory');
     if (history) {
       setSearchHistory(JSON.parse(history));
@@ -39,21 +42,16 @@ const App = () => {
     localStorage.removeItem('flickrSearchHistory');
   };
 
-  // JSONP implementation to handle CORS
   const fetchFlickrJSONP = (term) => {
     return new Promise((resolve, reject) => {
-      // Clean up any previous JSONP script tags
+
       const oldScript = document.getElementById('flickr-jsonp-script');
       if (oldScript) {
         document.head.removeChild(oldScript);
       }
-
-      // Create a unique callback name
       const callbackName = `flickrJsonpCallback_${Date.now()}`;
       
-      // Create the global callback function
       window[callbackName] = (data) => {
-        // Clean up
         delete window[callbackName];
         const script = document.getElementById('flickr-jsonp-script');
         if (script) {
@@ -63,31 +61,26 @@ const App = () => {
         resolve(data);
       };
 
-      // Build the URL
+      //URL
       const encodedTerm = encodeURIComponent(term.trim());
       const url = `https://www.flickr.com/services/feeds/photos_public.gne?format=json&tags=${encodedTerm}&jsoncallback=${callbackName}`;
       
-      // Create script element
+      //Creare script
       const script = document.createElement('script');
       script.src = url;
       script.id = 'flickr-jsonp-script';
       script.type = 'text/javascript';
       script.async = true;
       
-      // Handle errors
       script.onerror = () => {
-        // Clean up
         delete window[callbackName];
         if (document.getElementById('flickr-jsonp-script')) {
           document.head.removeChild(document.getElementById('flickr-jsonp-script'));
         }
         reject(new Error('Failed to load Flickr data'));
       };
-      
-      // Add the script to the page
+      //Adaugare script pepagina
       document.head.appendChild(script);
-      
-      // Set a timeout in case the request hangs
       setTimeout(() => {
         if (window[callbackName]) {
           delete window[callbackName];
@@ -96,7 +89,7 @@ const App = () => {
           }
           reject(new Error('Request timeout'));
         }
-      }, 10000); // 10 seconds timeout
+      }, 10000); // 10 secunde
     });
   };
 
@@ -109,10 +102,7 @@ const App = () => {
     saveToHistory(term);
     
     try {
-      // Use our JSONP implementation
       const data = await fetchFlickrJSONP(term);
-      
-      // Apply sorting based on filter options
       let sortedItems = [...(data.items || [])];
       
       if (filterOptions.sortBy === 'date-desc') {
@@ -121,12 +111,9 @@ const App = () => {
         sortedItems.sort((a, b) => new Date(a.published) - new Date(b.published));
       }
       
-      // Apply content filtering
+      // Aplică filtre
       if (filterOptions.contentType !== 'all') {
-        // This is just a simulation since the Flickr API doesn't provide content type filtering
-        // In a real app, you would use the API's filtering capabilities
         if (filterOptions.contentType === 'photos-only') {
-          // No filtering needed as they're all photos
         } else if (filterOptions.contentType === 'screenshots') {
           sortedItems = sortedItems.filter(item => item.tags.includes('screenshot'));
         }
@@ -343,7 +330,7 @@ const App = () => {
                         </h3>
                         <p className="text-xs text-gray-500 mt-1 flex items-center">
                           <span className="w-4 h-4 bg-gray-200 rounded-full mr-2 flex-shrink-0 overflow-hidden">
-                            {/* Placeholder for author avatar */}
+                            {}
                           </span>
                           {extractAuthorName(photo.author)}
                         </p>

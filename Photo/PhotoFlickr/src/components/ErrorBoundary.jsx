@@ -1,6 +1,4 @@
-
-
-// src/components/ErrorBoundary.jsx
+//Tun Claudia-Gabriela
 import React from 'react';
 
 class ErrorBoundary extends React.Component {
@@ -10,12 +8,10 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Actualizează state-ul pentru a afișa UI de eroare
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Poți să loghezi eroarea
     console.error("Eroare prinsă de ErrorBoundary:", error, errorInfo);
     this.setState({
       error: error,

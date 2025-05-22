@@ -1,5 +1,4 @@
-
-// src/components/Loader.jsx
+//Chiriliuc Laura
 import React from 'react';
 
 class Loader extends React.Component {

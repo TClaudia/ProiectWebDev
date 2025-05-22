@@ -1,4 +1,4 @@
-// src/components/Header.jsx
+//  Latescu Carmen-Maria
 import React from 'react';
 
 class Header extends React.Component {
