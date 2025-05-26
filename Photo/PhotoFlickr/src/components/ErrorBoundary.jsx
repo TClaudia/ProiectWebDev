@@ -6,11 +6,12 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
-
+//Actualizează state-ul când apare o eroare
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
 
+// Loghează erorile pentru debugging
   componentDidCatch(error, errorInfo) {
     console.error("Eroare prinsă de ErrorBoundary:", error, errorInfo);
     this.setState({
@@ -18,7 +19,9 @@ class ErrorBoundary extends React.Component {
       errorInfo: errorInfo
     });
   }
-
+//Afișează mesaj de eroare dacă hasError este true
+//Oferă buton pentru reload
+//Afișează detalii tehnice în mod expandabil
   render() {
     if (this.state.hasError) {
       return (

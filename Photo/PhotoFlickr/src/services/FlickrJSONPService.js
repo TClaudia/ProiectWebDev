@@ -11,6 +11,12 @@ class FlickrJSONPService {
 
   
   // Crearea script de incarcare
+
+  /* Creează element script dinamic
+Setează src cu callback parameter
+Configurează proprietățile async
+*/
+
   createScriptTag(url, callbackName) {
     const script = document.createElement('script');
     script.src = `${url}&jsoncallback=${callbackName}`;
@@ -22,6 +28,7 @@ class FlickrJSONPService {
 
   
   //Sterge un script dupa ID
+  // //Găsește și elimină elementul din DOM
   removeScriptTag(id) {
     const script = document.getElementById(id);
     if (script) {
@@ -31,7 +38,13 @@ class FlickrJSONPService {
 
   
   // Cautare forografii
-  
+  /*
+  Curăță script-urile anterioare
+Creează callback global unic
+Gestionează timeout și erori
+Face cleanup după execuție
+  */
+ 
   searchPhotos(searchTerm) {
     return new Promise((resolve, reject) => {
       this.removeScriptTag('flickr-jsonp-script');
