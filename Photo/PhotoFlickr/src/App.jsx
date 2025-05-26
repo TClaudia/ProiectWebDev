@@ -113,8 +113,7 @@ const App = () => {
       
       // Aplică filtre
       if (filterOptions.contentType !== 'all') {
-        if (filterOptions.contentType === 'photos-only') {
-        } else if (filterOptions.contentType === 'screenshots') {
+        if (filterOptions.contentType === 'photos-only') { /* empty */ } else if (filterOptions.contentType === 'screenshots') {
           sortedItems = sortedItems.filter(item => item.tags.includes('screenshot'));
         }
       }
