@@ -10,6 +10,9 @@ const App = () => {
   const [prevSearch, setPrevSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
+  // Control filtre: vizibilitate, filtre aplicate, temporare până la aplicare
   const [showFilters, setShowFilters] = useState(false);
   const [filterOptions, setFilterOptions] = useState({
     sortBy: 'relevance',
@@ -19,6 +22,9 @@ const App = () => {
     sortBy: 'relevance',
     contentType: 'all'
   });
+
+
+  // Istoric căutări
   const [searchHistory, setSearchHistory] = useState([]);
 
   useEffect(() => {
@@ -41,6 +47,9 @@ const App = () => {
     setSearchHistory([]);
     localStorage.removeItem('flickrSearchHistory');
   };
+
+
+
 
   const fetchFlickrJSONP = (term) => {
     return new Promise((resolve, reject) => {
@@ -95,6 +104,7 @@ const App = () => {
     });
   };
 
+  //Funcția de căutare a fotografiilor
   const searchPhotos = async (term) => {
     if (!term.trim()) return;
     
@@ -205,6 +215,7 @@ const App = () => {
             </form>
           </div>
 
+          {/* Istoric căutări */}
           {searchHistory.length > 0 && (
             <div className="mt-4 flex items-center text-sm text-gray-500">
               <span className="mr-2">Căutări recente:</span>
@@ -230,7 +241,8 @@ const App = () => {
               </div>
             </div>
           )}
-
+          
+          { /* Panou de filtre și sortare */}
           <div className="mt-6">
             <button 
               className="flex items-center text-gray-600 hover:text-blue-600 text-sm"
@@ -242,9 +254,12 @@ const App = () => {
             </button>
             
             {showFilters && (
+              // Panou de filtre și sortare
               <div className="mt-3 p-4 bg-white rounded-lg shadow-md border border-gray-100">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
+                    
+                    {/* Filtru pentru sortare */}
                     <label htmlFor="sortBy" className="block text-sm font-medium text-gray-700 mb-1">
                       Sortare după:
                     </label>
@@ -262,6 +277,7 @@ const App = () => {
                     </select>
                   </div>
                   
+                  {/* Filtru pentru tipul de conținut */}
                   <div>
                     <label htmlFor="contentType" className="block text-sm font-medium text-gray-700 mb-1">
                       Conținut:
@@ -281,6 +297,7 @@ const App = () => {
                   </div>
                 </div>
                 
+                {/* Butoane pentru aplicarea și resetarea filtrelor */}
                 <div className="mt-4 flex justify-between">
                   <button 
                     className="text-sm flex items-center text-gray-600 hover:text-blue-600"
@@ -301,7 +318,8 @@ const App = () => {
             )}
           </div>
         </div>
-
+        
+        {/* Afișează fotografiile găsite sau mesajul corespunzător */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16">
@@ -318,6 +336,8 @@ const App = () => {
                 {photos.length} fotografii pentru: "{prevSearch}"
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+                {/* Afișează fotografiile găsite */}
                 {photos.map((photo) => (
                   <div key={photo.link} className="group bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                     <a href={photo.link} target="_blank" rel="noopener noreferrer" className="block">
@@ -340,6 +360,8 @@ const App = () => {
                           </span>
                           {extractAuthorName(photo.author)}
                         </p>
+
+                        {/*Afișează maxim 3 etichete*/}
                         {photo.tags && (
                           <div className="mt-2 flex flex-wrap gap-1">
                             {photo.tags.split(' ').slice(0, 3).map(tag => (
@@ -359,6 +381,8 @@ const App = () => {
               </div>
             </div>
           ) : prevSearch ? (
+
+            // Dacă nu s-au găsit fotografii pentru termenul căutat
             <div className="text-center py-16">
               <Image className="h-16 w-16 mx-auto text-gray-300" />
               <p className="mt-4 text-gray-600">Nu s-au găsit fotografii pentru "{prevSearch}"</p>

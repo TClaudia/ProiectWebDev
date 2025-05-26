@@ -9,6 +9,7 @@ class Pagination extends React.Component {
     };
   }
 
+  // Resetează la pagina 1 când se schimbă totalul de elemente
   componentDidUpdate(prevProps) {
     if (prevProps.totalItems !== this.props.totalItems) {
       this.setState({ currentPage: 1 });
@@ -16,6 +17,7 @@ class Pagination extends React.Component {
     }
   }
 
+  // Gestionează schimbarea paginii cu scroll automat
   handlePageChange = (newPage) => {
     this.setState({ currentPage: newPage });
     this.props.onPageChange(newPage);
@@ -32,10 +34,13 @@ class Pagination extends React.Component {
     
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     
+    // Nu afișa paginarea pentru o singură pagină
     if (totalPages <= 1) {
       return null;
     }
     
+
+    // Logica de afișare a paginilor
     let pages = [];
     const maxPagesToShow = 5;
     
@@ -54,6 +59,7 @@ class Pagination extends React.Component {
     
     return (
       <div className="flex justify-center items-center mt-8 py-4">
+        {/* Butoane pentru paginare */}
         <button 
           className="h-10 w-10 flex items-center justify-center rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={currentPage === 1}
@@ -66,6 +72,7 @@ class Pagination extends React.Component {
         </button>
         
         <div className="flex">
+          {/* Afișează numerele de pagină */}
           {pages.map((page, index) => (
             page === '...' ? (
               <span 

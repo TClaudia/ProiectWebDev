@@ -2,6 +2,8 @@
 import React from 'react';
 
 class SearchHistory extends React.Component {
+  // Afișează istoricul căutărilor
+  // și permite selectarea unui termen sau ștergerea istoricului
   render() {
     const { history, onSelectTerm, onClearHistory } = this.props;
     

@@ -10,10 +10,12 @@ class SearchBar extends React.Component {
     };
   }
 
+  // Actualizează termenul de căutare când se schimbă inputul
   handleInputChange = (e) => {
     this.setState({ searchTerm: e.target.value });
   };
 
+  // Gestionează trimiterea formularului și apelează funcția de căutare
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.onSearch(this.state.searchTerm);
