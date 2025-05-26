@@ -5,24 +5,25 @@ class FilterOptions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isExpanded: false,
+      isExpanded: false, // Controlează expandarea filtrelor
       selectedSortOption: 'relevance',
       selectedContentFilter: 'all'
     };
   }
-
+//Deschide/închide panoul de filtre, Inversează isExpanded
   toggleExpand = () => {
     this.setState(prevState => ({
       isExpanded: !prevState.isExpanded
     }));
   }
 
+  //Actualizează opțiunea de sortare, Notifică componenta părinte prin prop
   handleSortChange = (e) => {
     const value = e.target.value;
     this.setState({ selectedSortOption: value });
     this.props.onSortChange(value);
   }
-
+//Actualizează filtrul de conținut 
   handleFilterChange = (e) => {
     const value = e.target.value;
     this.setState({ selectedContentFilter: value });
@@ -40,7 +41,7 @@ class FilterOptions extends React.Component {
           aria-expanded={isExpanded}
         >
           <span className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
             Filtrare și sortare
@@ -70,7 +71,7 @@ class FilterOptions extends React.Component {
                   id="sort-options" 
                   value={selectedSortOption}
                   onChange={this.handleSortChange}
-                  className="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-primary focus:border-primary text-sm"
+                  className="w-full p-2 border border-red-300 rounded-md bg-white focus:ring-primary focus:border-primary text-sm"
                 >
                   <option value="relevance">Relevanță</option>
                   <option value="date-desc">Data (recent)</option>
@@ -99,7 +100,7 @@ class FilterOptions extends React.Component {
             
             <div className="mt-4 flex justify-end">
               <button 
-                className="text-sm bg-gray-600 text-white px-3 py-2 rounded hover:bg-gray-700 transition-colors"
+                className="text-sm bg-gray-500 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors"
                 onClick={this.props.onResetFilters}
               >
                 Resetare filtre

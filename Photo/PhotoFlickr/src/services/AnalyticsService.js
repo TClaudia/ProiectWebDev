@@ -9,6 +9,12 @@ class AnalyticsService {
   }
 
   //Activeaza sau dezactiveaza serviciului
+  /*
+  Scop: Activează/dezactivează tracking-ul
+Parametri: isEnabled - boolean pentru stare
+Actualizează flag-ul
+Șterge evenimentele dacă se dezactiveaz
+*/
   setEnabled(isEnabled) {
     this.enabled = !!isEnabled;
     
@@ -20,12 +26,13 @@ class AnalyticsService {
 
   // Înregistrează un eveniment de căutare
    
-  trackSearch(searchTerm) {
+  trackSearch(searchTerm) { //termenul cautat
     if (!this.enabled || !searchTerm) return;
     
     this.trackEvent('search', { term: searchTerm });
   }
 
+  // Înregistrează click pe fotografie
   trackPhotoClick(photoId, photoTitle) {
     if (!this.enabled || !photoId) return;
     
@@ -35,6 +42,12 @@ class AnalyticsService {
     });
   }
 
+  /*
+   Înregistrează orice tip de eveniment
+  Creează obiect eveniment cu timestamp
+Salvează în array local
+Loghează în consolă
+*/
   trackEvent(eventName, eventData = {}) {
     if (!this.enabled || !eventName) return;
     

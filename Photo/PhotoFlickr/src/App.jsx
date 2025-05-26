@@ -22,7 +22,7 @@ const App = () => {
   const [searchHistory, setSearchHistory] = useState([]);
 
   useEffect(() => {
-    // Incarca istorc din localStorage
+    // Incarca istoric din localStorage
     const history = localStorage.getItem('flickrSearchHistory');
     if (history) {
       setSearchHistory(JSON.parse(history));
@@ -44,13 +44,14 @@ const App = () => {
 
   const fetchFlickrJSONP = (term) => {
     return new Promise((resolve, reject) => {
-
+      // 1. Cleanup script anterior
       const oldScript = document.getElementById('flickr-jsonp-script');
       if (oldScript) {
         document.head.removeChild(oldScript);
       }
       const callbackName = `flickrJsonpCallback_${Date.now()}`;
-      
+
+        // 2. Creare callback unic
       window[callbackName] = (data) => {
         delete window[callbackName];
         const script = document.getElementById('flickr-jsonp-script');
@@ -79,7 +80,8 @@ const App = () => {
         }
         reject(new Error('Failed to load Flickr data'));
       };
-      //Adaugare script pepagina
+
+      //Adaugare script pe pagina
       document.head.appendChild(script);
       setTimeout(() => {
         if (window[callbackName]) {
@@ -129,25 +131,26 @@ const App = () => {
     }
   };
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     searchPhotos(searchTerm);
   };
-
+  //Actualizează filtrele temporare
   const handleFilterChange = (e) => {
     setTempFilterOptions({
       ...tempFilterOptions,
       [e.target.name]: e.target.value
     });
   };
-
+//Aplică filtrele și re-execută căutarea
   const applyFilters = () => {
     setFilterOptions(tempFilterOptions);
     if (prevSearch) {
       searchPhotos(prevSearch);
     }
   };
-
+  //Resetează filtrele la valorile default
   const resetFilters = () => {
     const defaultOptions = {
       sortBy: 'relevance',
@@ -160,6 +163,10 @@ const App = () => {
     }
   };
 
+
+  //Scop: Extrage numele autorului din string-ul Flickr
+//Parametri: author - string în format "email ("Nume")"
+//Returnează: Numele autorului sau "Autor necunoscut"
   const extractAuthorName = (author) => {
     const match = author.match(/\("(.+?)"\)/);
     return match ? match[1] : "Autor necunoscut";
